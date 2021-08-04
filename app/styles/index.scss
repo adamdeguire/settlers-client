@@ -1,1 +1,62 @@
 @import '~bootstrap/scss/bootstrap';
+
+body {
+  max-width: 600px;
+  margin: auto;
+}
+
+.board {
+  position: absolute;
+  width: calc(var(--s) * 11);
+  left: 18%;
+  display:flex;
+  --s: 6vw;  /* size  */
+  --m: .05vw;    /* margin */
+  --f: calc(1.732 * var(--s) + 4 * var(--m)  - 1px);
+}
+
+.container {
+
+  font-size: 0; /*disable white space between inline block element */
+}
+
+.container .row {
+  display: block;
+}
+
+.row div {
+  width: var(--s);
+  margin: var(--m);
+  height: calc(var(--s)*1.1547);
+  display: inline-block;
+  overflow: hidden;
+  align-items: center;
+  clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
+  margin-bottom: calc(var(--m) - var(--s)*0.2885);
+}
+
+.container::before {
+  content: "";
+  width: calc(var(--s)/2 + var(--m));
+  float: left;
+  height: 120%;
+  shape-outside: repeating-linear-gradient(
+                   #0000 0 calc(var(--f) - 3px),
+                   #000  0 var(--f));
+}
+
+.top {
+  margin-left: 13.5%;
+}
+
+.water {
+  background-color: lightskyblue;
+}
+
+.land {
+  background-color: lightgreen;
+  
+  &:hover{
+    opacity: .7;
+  }
+}
