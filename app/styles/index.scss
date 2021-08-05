@@ -63,7 +63,7 @@ body {
   background-size: 75%;
   background-position: center;
   background-repeat: no-repeat;
-  background-image: url('../../public/images/port.png');
+  background-image: url('./../../public/images/port.png');
 }
 
 .land {
@@ -75,7 +75,7 @@ body {
   background-color: lightgreen;
 
     &:hover {
-      background-image: url('../../public/images/sheep.png');
+      background-image: url('./../../public/images/sheep.png');
       background-size: 68%;
     }
 }
@@ -85,7 +85,7 @@ body {
   background-size: 160%;
 
   &:hover {
-    background-image: url('../../public/images/wheat.png');
+    background-image: url('./../../public/images/wheat.png');
     background-position-y: -10%;
     background-size: 152%;
   }
@@ -96,7 +96,7 @@ body {
   background-size: 280%;
 
   &:hover {
-    background-image: url('../../public/images/wood.png');
+    background-image: url('./../../public/images/wood.png');
     background-size: 202%;
   }
 }
@@ -106,7 +106,7 @@ body {
   background-size: 246%;
 
   &:hover {
-    background-image: url('../../public/images/brick.png');
+    background-image: url('./../../public/images/brick.png');
     background-size: 336%;
   }
 }
@@ -115,7 +115,7 @@ body {
   background-color: slategray;
 
   &:hover {
-    background-image: url('../../public/images/ore.png');
+    background-image: url('./../../public/images/ore.png');
     background-size: 145%;
   }
 }
@@ -125,7 +125,7 @@ $numbers: 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12;
 @each $number in $numbers {
   .marker#{$number} {
     opacity: 1;
-    background-image: url('../../public/images/#{$number}.png');
+    background-image: url('./../../public/images/#{$number}.png');
     background-size: 50%;
     background-position: center;
     background-repeat: no-repeat;
