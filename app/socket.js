@@ -1,8 +1,8 @@
 'use strict'
-
 const io = require('socket.io-client')
 const socket = io('http://localhost:4741')
 const store = require('./store')
+
 let connected = store.connected
 let joined = store.joined
 let connectedCount = 0
@@ -34,9 +34,14 @@ const greetUser = () => {
 }
 
 const displayMessage = (data) => {
+  let display
   if (!data.message) return
-  if (!data.user) data.user = 'Server'
-  $(`<p>${data.user}: ${data.message}</p>`).hide().prependTo('#gameLog').show('slow')
+  if (!data.user) {
+    display = `<p>${data.message}</p>`
+  } else {
+    display = `<p>${data.user}: ${data.message}</p>`
+  }
+  $(display).hide().prependTo('#gameLog').show('slow')
 }
 
 const sendMessage = (event) => {
@@ -53,24 +58,49 @@ const sendMessage = (event) => {
 }
 
 // Receive
-socket.on('board', (targetId) => {
+socket.on('click', (targetId) => {
   $(`#${targetId}`).trigger('click')
 })
 
 // Send
-const sendBoard = (targetId) => {
-  socket.emit('board', targetId)
+const sendClick = (targetId) => {
+  socket.emit('click', targetId)
 }
 
-const update = (message) => {
+socket.on('start-game', (gameBoard) => {
+  $('#startGame').hide('slow')
+  $('.showOnStartGame').show('slow')
+  $('#settlements').show()
+  $('.settlement').draggable()
+  $('.board').html(gameBoard)
+})
+
+const startGame = () => {
+  const gameBoard = $('.board').html()
+  updateLog(`${store.email} started the game.`)
+  socket.emit('start-game', gameBoard)
+}
+
+const updateLog = (message) => {
   socket.emit('message', { message })
   displayMessage({ message })
 }
 
+socket.on('settlement', (settlements) => {
+  console.log('test')
+  $('#settlements').html(settlements)
+})
+
+const updateSettlements = (settlements) => {
+  socket.emit('settlement', settlements)
+}
+
 module.exports = {
   connect,
-  update,
+  startGame,
+  updateLog,
   sendMessage,
   greetUser,
-  sendBoard
+  sendClick,
+  updateSettlements
 }

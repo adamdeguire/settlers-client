@@ -9,6 +9,7 @@
   "dependencies": {
     "bootstrap": "^5.0.1",
     "jquery": "^3.6.0",
+    "jquery-ui": "^1.12.1",
     "knuth-shuffle": "^1.0.8",
     "popper.js": "^1.14.3",
     "socket.io": "^4.1.3",

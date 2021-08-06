@@ -46,9 +46,13 @@
                 <input id="chat" autocomplete="off" class="message" type="text">
                 <input type="submit" value="Send"/>
               </form>
-              <button id="newGame">New Game</button>
+              <button id="joinLobby" class="hideOnStartGame">Join Lobby</button>
+              <button id="startGame" class="hideOnStart hideOnStartGame">Start Game</button>
+              </div>
+                <div id="settlements" class="hideOnStart showOnStartGame border">Settlements
+                <div id="settlement1" class="settlement"></div>
+              </div>
             </div>
-          </div>
           <div id="game" class="col-7">
             <div id="board" class="board">
               <div class="container">

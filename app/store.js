@@ -1,5 +1,6 @@
 const store = {
-  connected: false
+  connected: false,
+  settlementCount: 0
 }
 
 module.exports = store

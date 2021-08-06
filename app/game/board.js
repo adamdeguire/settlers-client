@@ -57,25 +57,63 @@ const initializeIntersect = () => {
   }
 }
 
+const initializePieces = () => {
+  $('.settlement').draggable()
+  $('body').on('mouseup', '.settlement', placeSettlement)
+}
+
 const initialize = () => {
   initializeTiles()
   initializeIntersect()
+  initializePieces()
 }
 
-const placeSettlement = (e) => {
-  if ($(e.target).hasClass('clicked')) {
-    $(e.target).remove()
-  } else {
-    if (e.originalEvent) socket.update(`${store.email} built a settlement.`)
-    $(e.target).addClass('clicked')
-    const div = $('<div class="settlement"></div>')
-    const rect = $(e.target)[0].getBoundingClientRect()
-    $('body').append(div.offset({ top: rect.top + 10, left: rect.left + 10 }))
-    socket.sendBoard(e.target.id)
+const placeSettlement = (event) => {
+  const intersect = closestIntersection(event)
+  if (!intersect) return
+  store.settlementCount++
+  console.log(store.settlementCount)
+  const x = intersect.x + 10
+  const y = intersect.y
+  $(`#${event.target.id}`).css({ top: y, left: x }).off()
+  $('#settlements').append(`<div id="settlement${store.settlementCount + 1}" class="settlement"></div>`)
+  $(`#settlement${store.settlementCount + 1}`).draggable()
+  socket.updateLog(`${store.email} built a settlement.`)
+  socket.updateSettlements($('#settlements').html())
+}
+
+const closestIntersection = (event) => {
+  const rect = $(event.target)[0].getBoundingClientRect()
+  const intersectLocations = []
+  const selectors = ['.intersect']
+
+  selectors.forEach(selector => {
+    $(selector).each(function () {
+      const rect = this.getBoundingClientRect()
+      const x = rect.left
+      const y = rect.top
+      intersectLocations.push({ x, y })
+    })
+  })
+  let closest = intersectLocations[0]
+
+  intersectLocations.forEach(location => {
+    if (getOffset(location) < getOffset(closest)) {
+      closest = location
+    }
+  })
+
+  function getOffset (location) {
+    const xOffset = Math.abs(location.x - rect.left)
+    const yOffset = Math.abs(location.y - rect.top)
+    return xOffset + yOffset
   }
+  return closest
 }
 
 module.exports = {
   initialize,
-  placeSettlement
+  initializeIntersect,
+  placeSettlement,
+  closestIntersection
 }

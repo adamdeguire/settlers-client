@@ -22,6 +22,7 @@ const onSignInSuccess = (response) => {
   nav.transitionText('#message', `Welcome back, ${response.user.email}!`)
   $('#signIn').trigger('reset')
   nav.transitionText('#gameTitle', ' ')
+  store._id = response.user._id
   store.token = response.user.token
   store.email = response.user.email
 }

@@ -1,11 +1,11 @@
 // use require with a reference to bundle the file and use it in this file
 // const example = require('./example')
 
-const board = require('./game/board')
+import 'jquery-ui/ui/widgets/draggable'
+const gameEvents = require('./game/events')
 const authEvents = require('./auth/events')
 const nav = require('./nav/ui')
 const socket = require('./socket')
-const road = require('./game/road')
 
 // use require without a reference to ensure a file is bundled
 // require('./example')
@@ -27,17 +27,8 @@ $(() => {
   $('#account').on('click', nav.onAccount)
   $('#neat').on('click', nav.onAccount)
 
-  $('#newGame').on('click', () => {
-    // $('#newGame').hide('slow')
-    socket.connect()
-    socket.greetUser()
-
-    board.initialize()
-    $('.intersect').on('click', (event) => {
-      board.placeSettlement(event)
-      road.closestIntersection(event)
-    })
-  })
+  $('#joinLobby').on('click', gameEvents.onJoinLobby)
+  $('#startGame').on('click', gameEvents.onStartGame)
 
   $('#chatInput').on('submit', socket.sendMessage)
 
