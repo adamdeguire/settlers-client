@@ -2,42 +2,40 @@
 
 // const ui = require('./ui')
 // const nav = require('../nav/ui')
-const store = require('../store')
+const player = require('../player')
 const config = require('../config')
+const ui = require('./ui')
 
 // Request new game creation
 const createGame = () => {
-  console.log(store._id)
   return $.ajax({
-    url: `${config.apiUrl}/game`,
+    url: `${config.apiUrl}/games`,
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${store.token}`
+      Authorization: `Bearer ${player.token}`
     },
     data: {
       game: {
-        owner: store._id
+        owner: player._id
       }
     }
   })
-    .then(res => { store.gameId = res.game._id })
+    .then(ui.onStartGameSuccess)
     .catch(err => console.log(err))
 }
 
-const updateGame = () => {
+const updateGame = (key, value) => {
   return $.ajax({
     url: `${config.apiUrl}/change-password`,
     method: 'PATCH',
     headers: {
-      Authorization: `Bearer ${store.token}`
+      Authorization: `Bearer ${player.token}`
     },
     data: {
       game: {
-        _id: store.gameId,
-        owner: store._id,
-        board: $('#board').html(),
-        settlements: $('#settlements').html(),
-        roads: $('#roads').html()
+        _id: player.gameId,
+        key,
+        value
       }
     }
   })

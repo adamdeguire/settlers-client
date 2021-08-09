@@ -6,6 +6,7 @@ const gameEvents = require('./game/events')
 const authEvents = require('./auth/events')
 const nav = require('./nav/ui')
 const socket = require('./socket')
+const rollDice = require('./game/dice/roll').rollDice
 
 // use require without a reference to ensure a file is bundled
 // require('./example')
@@ -28,9 +29,12 @@ $(() => {
   $('#neat').on('click', nav.onAccount)
 
   $('#joinLobby').on('click', gameEvents.onJoinLobby)
-  $('#startGame').on('click', gameEvents.onStartGame)
+  $('#buildSettlement').on('click', gameEvents.onBuildSettlement)
+  $('#buildRoad').on('click', gameEvents.onBuildRoad)
+  $('.color').on('click', gameEvents.onSelectColor)
 
   $('#chatInput').on('submit', socket.sendMessage)
 
   $('.hideOnStart').hide()
+  $('#rollDice').on('click', rollDice)
 })

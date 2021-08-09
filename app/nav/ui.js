@@ -54,10 +54,12 @@ const onSignInInstead = (event) => {
 
 // Transition to Main Menu view
 const onMainMenu = () => {
-  transitionText('#message', 'Main Menu')
   $('.hideOnSignIn, .showOnNewGame, .showOnAccount').hide(400)
   $('footer, #showSignOut').show()
   setTimeout(() => $('.showOnSignIn').show(600), 400)
+  setTimeout(() => {
+    transitionText('#message', 'Settlers')
+  }, 5000)
 }
 
 // Transition to Account view

@@ -1,0 +1,7 @@
+<rect x="7" y="7" rx="2" width="76" height="76" stroke-width="9" fill="white" stroke="#000"/>
+<circle cx="25" cy="25" r="8"/>
+<circle cx="25" cy="45" r="8"/>
+<circle cx="25" cy="65" r="8"/>
+<circle cx="65" cy="25" r="8"/>
+<circle cx="65" cy="45" r="8"/>
+<circle cx="65" cy="65" r="8"/>

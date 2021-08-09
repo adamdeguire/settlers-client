@@ -1,7 +1,7 @@
 'use strict'
 const ui = require('./ui')
 const nav = require('../nav/ui')
-const store = require('../store')
+const player = require('../player')
 const config = require('../config')
 
 // Request new user creation
@@ -32,7 +32,7 @@ const signOut = () => {
     url: `${config.apiUrl}/sign-out`,
     method: 'DELETE',
     headers: {
-      Authorization: `Bearer ${store.token}`
+      Authorization: `Bearer ${player.token}`
     }
   })
     .then(ui.onSignOutSuccess)
@@ -45,7 +45,7 @@ const changePassword = (data) => {
     url: `${config.apiUrl}/change-password`,
     method: 'PATCH',
     headers: {
-      Authorization: `Bearer ${store.token}`
+      Authorization: `Bearer ${player.token}`
     },
     data: data
   })

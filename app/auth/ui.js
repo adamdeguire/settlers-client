@@ -1,5 +1,5 @@
 'use strict'
-const store = require('../store')
+const player = require('../player')
 const nav = require('../nav/ui')
 
 // On API Response Status 201, Created
@@ -22,9 +22,9 @@ const onSignInSuccess = (response) => {
   nav.transitionText('#message', `Welcome back, ${response.user.email}!`)
   $('#signIn').trigger('reset')
   nav.transitionText('#gameTitle', ' ')
-  store._id = response.user._id
-  store.token = response.user.token
-  store.email = response.user.email
+  player._id = response.user._id
+  player.token = response.user.token
+  player.email = response.user.email
 }
 
 // On API Response Status 400+

@@ -2,15 +2,15 @@
 
 body {
   width: 100vw;
-  max-width: 1920px;
+  // max-width: 1920px;
   height: 100vh;
   position: relative;
   padding: 0;
   margin: 0;
   z-index: -1;
   background-color: brown;
-  overflow: visible;
-  --s: 6vw;  /* size  */
+  overflow: hidden;
+  --s: 120px;  /* size  */
   --m: .05rem;    /* margin */
   --f: calc(1.735 * var(--s) + 4 * var(--m)  - 1px);
 }
@@ -49,13 +49,26 @@ body {
   width: 100%;
 }
 
+#chatInput {
+  margin-top: -25px;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+#send {
+  width: 77px;
+  margin-left: 0;
+  margin-right: 0;
+}
+
 .board {
   background-color: lightgoldenrodyellow;
   position: absolute;
-  height: 100vh;
+  padding-bottom: 120px;
+  margin-top: -30px;
   overflow: hidden;
   display:flex;
-  width: calc(5 * --s);
+  width: 1125px;
 }
 
 .board * {
@@ -63,7 +76,6 @@ body {
 }
 
 .container {
-  width: 80vw;
   margin: inherit;
   padding: 0;
 }
@@ -71,7 +83,6 @@ body {
 .container .boardRow {
   position: relative;
   display: block;
-  width: 80vw;
 }
 
 .boardRow div {
@@ -98,6 +109,7 @@ body {
 
 .water {
   background-color: lightskyblue;
+  z-index: 10;
 }
 
 .port {
@@ -168,26 +180,78 @@ body {
 }
 
 .settlement {
-  top: 0;
+  bottom: 10vh;
   width: calc(var(--s) / 3);
   height: calc((var(--s)*1.16) / 2);
   position: absolute;
   z-index: 999 !important;
-  background-color: orange;
   clip-path: polygon(40% 5%, 72% 30%, 72% 60%, 8% 60%, 8% 30%);
+}
 
-  &:hover {
-    background-color: green;
+.road {
+  bottom: 10vh;
+  height: calc((3 * var(--s)) / 5);
+  width: 10px;
+  position: absolute;
+  z-index: 999 !important;
+
+  &.t-l {
+    transform: rotate(240deg);
+  }
+  &.t-r {
+    transform: rotate(120deg);
+  }
+  &.b-r {
+    transform: rotate(240deg);
+  }
+  &.b-l {
+    transform: rotate(120deg);
   }
 }
 
-#settlements {
-  width: 20vw;
-  bottom: 10vh;
+.land .r {
+  top: 25%;
+  left: 25%;
+  height: calc((3 * var(--s)) / 5);
+  width: 20px;
+  position: absolute;
+  z-index: 998 !important;
+  background-color: transparent;
+  clip-path: unset;
+
+  &.t-l {
+    transform: rotate(240deg);
+    top: -20% !important;
+    left: 40% !important;
+  }
+  &.t-r {
+    transform: rotate(120deg);
+    top: -20% !important;
+    left: 95% !important;
+  }
+  &.r-m {
+    top: 25% !important;
+    left: 97% !important;
+  }
+  &.b-r {
+    transform: rotate(240deg);
+    top: 57% !important;
+    left: 95% !important;
+  }
+  &.b-l {
+    transform: rotate(120deg);
+    top: 57% !important;
+    left: 40% !important;
+  }
+  &.l-m {
+    top: 25% !important;
+    left: -5% !important;
+  }
 }
 
-.row .intersect {
-  top: 0;
+.land .i {
+  top: 25%;
+  left: 25%;
   width: calc(var(--s) / 2);
   height: calc((var(--s)*1.16) / 2);
   position: absolute;
@@ -195,9 +259,99 @@ body {
   background-color: transparent;
   clip-path: circle();
 
-  &:hover {
-    background-color: rgba(0,0,0,.2);
+  &.t {
+    top: -25% !important;
   }
+
+  &.t-l {
+    top: -5% !important;
+    left: -25% !important;
+  }
+
+  &.t-r {
+    top: -5% !important;
+    left: 75% !important;
+  }
+
+  &.b-l {
+    top: 50% !important;
+    left: -25% !important;
+  }
+
+  &.b-r {
+    top: 50% !important;
+    left: 75% !important;
+  }
+
+  &.b {
+    top: 75% !important;
+  }
+}
+
+#dice {
+  display: flex;
+  justify-content: space-evenly;
+  height: 130px;
+  padding-top: 22.5px;
+}
+
+.dice {
+  display: inline-flex;
+}
+
+#resources, #build, #selectColor {
+  padding: 20px;
+  display: flex;
+  justify-content: space-evenly;
+
+  h2 {
+    line-height: 60px;
+    vertical-align: middle;
+  }
+}
+
+.resource {
+  font-size: 25px;
+  font-weight: bold;
+  line-height: 45px;
+  vertical-align: middle;
+  text-align: center;
+  display:inline-block;
+  height: 60px;
+  width: 60px;
+  border: 5px solid black;
+  border-radius: 15%;
+
+  &:hover {
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: transparent;
+    &#sheep { background-image: url('public/images/sheep.png') }
+    &#wheat { background-image: url('public/images/wheat.png') }
+    &#wood { background-image: url('public/images/wood.png') }
+    &#brick { background-image: url('public/images/brick.png') }
+    &#ore { background-image: url('public/images/ore.png') }
+  }
+
+  &#sheep { background-color: lightgreen }
+  &#wheat { background-color: gold }
+  &#wood { background-color: darkgreen }
+  &#brick { background-color: brown }
+  &#ore { background-color: slategray }
+}
+
+.color {
+  display:inline-block;
+  height: 60px;
+  width: 60px;
+  border: 5px solid black;
+  border-radius: 15%;
+
+  &#red { background-color: red }
+  &#blue { background-color: blue }
+  &#white { background-color: white }
+  &#orange { background-color: orange }
 }
 
 $numbers: 2, 3, 4, 5, 6, 8, 9, 10, 11, 12;
@@ -234,6 +388,17 @@ $numbers: 2, 3, 4, 5, 6, 8, 9, 10, 11, 12;
   .ore > .marker#{$number} {
     background-color: slategray;
   }
+}
+
+#rollDice {
+  height: 40px;
+  width: 88px;
+  margin-top: 24px;
+}
+
+.build {
+  height: 40px;
+  margin-top: 12px;
 }
 
 @media screen and (max-aspect-ratio: 1 / 1) {

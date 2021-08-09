@@ -1,10 +1,11 @@
 'use strict'
 const io = require('socket.io-client')
 const socket = io('http://localhost:4741')
-const store = require('./store')
+const player = require('./player')
+const resources = require('./game/resources')
 
-let connected = store.connected
-let joined = store.joined
+let connected = player.connected
+let joined = player.joined
 let connectedCount = 0
 
 const connect = () => {
@@ -20,7 +21,7 @@ socket.on('message', (data) => displayMessage(data))
 const greetUser = () => {
   if (joined) return
   joined = true
-  const user = store.email
+  const user = player.email
 
   let emitData = { message: `${user} joined the game!` }
   socket.emit('message', emitData)
@@ -45,12 +46,12 @@ const displayMessage = (data) => {
 }
 
 const sendMessage = (event) => {
+  event.preventDefault()
   if (!connected) {
     displayMessage({ message: 'Join the game to enable chat.', user: 'Server' })
     return
   }
-  event.preventDefault()
-  const user = store.email
+  const user = player.email
   const message = $('#chat').val()
   $('#chat').val('')
   displayMessage({ message, user })
@@ -75,9 +76,9 @@ socket.on('start-game', (gameBoard) => {
   $('.board').html(gameBoard)
 })
 
-const startGame = () => {
+const startGame = (res) => {
   const gameBoard = $('.board').html()
-  updateLog(`${store.email} started the game.`)
+  updateLog(`${player.email} started the game.`)
   socket.emit('start-game', gameBoard)
 }
 
@@ -87,7 +88,6 @@ const updateLog = (message) => {
 }
 
 socket.on('settlement', (settlements) => {
-  console.log('test')
   $('#settlements').html(settlements)
 })
 
@@ -95,12 +95,52 @@ const updateSettlements = (settlements) => {
   socket.emit('settlement', settlements)
 }
 
+socket.on('road', (roads) => {
+  $('#roads').html(roads)
+})
+
+const updateRoads = (roads) => {
+  socket.emit('road', roads)
+}
+
+const hideColor = (color) => {
+  socket.emit('hide-color', color)
+  $('#selectColor').hide('slow')
+}
+
+const rollDice = (roll1, roll2) => {
+  socket.emit('dice-roll', roll1, roll2)
+  const message = resources.getResources(roll1 + roll2)
+  setTimeout(() => displayMessage({ message }), 800)
+}
+
+socket.on('dice-roll', (roll1, roll2) => {
+  const rollValue = roll1 + roll2
+  $('#die1').load(`app/game/dice/die${roll1}.txt`)
+  $('#die2').load(`app/game/dice/die${roll2}.txt`)
+  $('.land').each(function () {
+    const marker = $(this).find(`.marker${rollValue}`)
+    marker.css('background-size', '75%')
+    setTimeout(() => marker.css('background-size', '50%'), 800)
+  })
+  const message = resources.getResources(rollValue)
+  setTimeout(() => displayMessage({ message }), 800)
+})
+
+socket.on('hide-color', color => {
+  $(`#${color}`).hide('slow')
+})
+
 module.exports = {
   connect,
   startGame,
+  hideColor,
+  rollDice,
   updateLog,
   sendMessage,
+  displayMessage,
   greetUser,
   sendClick,
-  updateSettlements
+  updateSettlements,
+  updateRoads
 }
