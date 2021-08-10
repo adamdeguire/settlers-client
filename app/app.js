@@ -23,15 +23,14 @@ $(() => {
   $('#showPassword').on('click', nav.onShowPassword)
   $('#cancelSignOut, #showSignOut').on('click', nav.onAreYouSure)
   $('#changeTheme').on('click', nav.changeTheme)
-  $('#navTitle').on('click', nav.onMainMenu)
-  $('footer').on('click', nav.toggleFooter)
   $('#account').on('click', nav.onAccount)
-  $('#neat').on('click', nav.onAccount)
+  $('#neat').on('click', nav.onMainMenu)
 
   $('#joinLobby').on('click', gameEvents.onJoinLobby)
   $('#buildSettlement').on('click', gameEvents.onBuildSettlement)
   $('#buildRoad').on('click', gameEvents.onBuildRoad)
   $('.color').on('click', gameEvents.onSelectColor)
+  $('#quitGame').on('click', gameEvents.onQuitGame)
 
   $('#chatInput').on('submit', socket.sendMessage)
 

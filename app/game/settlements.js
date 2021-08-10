@@ -2,6 +2,7 @@
 
 const socket = require('../socket')
 const player = require('../player')
+const api = require('./api')
 
 const placeSettlement = (event) => {
   const intersect = closestIntersection(event)
@@ -15,6 +16,7 @@ const placeSettlement = (event) => {
 
   socket.updateLog(`${player.email} built a settlement.`)
   socket.updateSettlements($('#settlements').html())
+  api.updateGame()
 }
 
 const closestIntersection = (event) => {

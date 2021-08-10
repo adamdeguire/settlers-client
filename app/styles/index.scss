@@ -1,6 +1,7 @@
 @import '~bootstrap/scss/bootstrap';
 
 body {
+  transition: .5s;
   width: 100vw;
   // max-width: 1920px;
   height: 100vh;
@@ -13,6 +14,10 @@ body {
   --s: 120px;  /* size  */
   --m: .05rem;    /* margin */
   --f: calc(1.735 * var(--s) + 4 * var(--m)  - 1px);
+}
+
+.btn {
+  margin-top: 15px;
 }
 
 .border {
@@ -61,7 +66,12 @@ body {
   margin-right: 0;
 }
 
+#startButtons, #message, #gameTitle {
+  margin: 15px 45px;
+}
+
 .board {
+  transition: .5s;
   background-color: lightgoldenrodyellow;
   position: absolute;
   padding-bottom: 120px;
@@ -400,6 +410,12 @@ $numbers: 2, 3, 4, 5, 6, 8, 9, 10, 11, 12;
 .build {
   height: 40px;
   margin-top: 12px;
+}
+
+footer {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
 }
 
 @media screen and (max-aspect-ratio: 1 / 1) {

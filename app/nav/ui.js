@@ -58,20 +58,8 @@ const onMainMenu = () => {
   $('footer, #showSignOut').show()
   setTimeout(() => $('.showOnSignIn').show(600), 400)
   setTimeout(() => {
-    transitionText('#message', 'Settlers')
+    transitionText('#message', ' ')
   }, 5000)
-}
-
-// Transition to Account view
-const onAccount = () => {
-  transitionText('#message', 'Your Account')
-  transitionHTML('#showTable', '')
-  $('#topNav').removeClass('showOnSignIn')
-  $('.signOutConfirm').removeClass('hideOnSignIn')
-  $('.hideOnSignIn, .showOnNewGame, .showOnSignIn').hide(400)
-  $('#topNav').addClass('showOnSignIn')
-  $('.signOutConfirm').addClass('hideOnSignIn')
-  setTimeout(() => $('.showOnAccount').show(600), 400)
 }
 
 // Toggle 'Sign Out' confirmation prompt
@@ -94,24 +82,11 @@ const onAreYouSure = () => {
 // Transition to Change Password view
 const onShowPassword = (event) => {
   event.preventDefault()
-  $('#changePassword, .showOnAccount').toggle(800)
+  $('#changePassword').toggle(800)
   if ($('#message').text() === 'Your Account') {
     transitionText('#message', 'Change Password')
   } else {
-    transitionText('#message', 'Your Account')
-  }
-}
-
-// Pop 'Sign Out' button up and down on mobile screens
-const toggleFooter = (event) => {
-  if ($(event.target).attr('id') || $(window).height() >= 750) return
-  if ($('#showSignOut').css('display') === 'none') onAreYouSure()
-  if ($('footer').hasClass('hidePopUp')) {
-    $('footer').removeClass('hidePopUp')
-    $('#showSignOut').on('click', onAreYouSure)
-  } else {
-    $('#showSignOut').off()
-    $('footer').addClass('hidePopUp')
+    transitionText('#message', 'Settlers')
   }
 }
 
@@ -127,14 +102,8 @@ const changeTheme = () => {
 
   // Set/unset Dark mode css styling
   transitionText('#changeTheme', theme ? 'Dark Mode' : 'Light Mode')
-  $('#gameMenu').css('background-color', theme ? '' : '#292b2c')
-  // $('.gameNav').css('background-color', theme ? '' : '#292b2c')
-  $('#topNav').css('background-color', theme ? '' : '#292b2c')
-  $('.border').css('background-color', theme ? '' : '#292b2c')
-  $('.btn').css('background-color', theme ? '' : '#292b2c')
-  $('input').css('background-color', theme ? '' : 'black')
-  $('body').css('background-color', theme ? '' : 'black')
-  $('.space').css('filter', theme ? '' : 'invert(100%)')
+  $('#gameMenu, .border, .btn').css('background-color', theme ? '' : '#292b2c')
+  $('input, body, .board').css('background-color', theme ? '' : 'black')
   $('*').css('color', theme ? '' : 'whitesmoke')
 }
 
@@ -142,13 +111,11 @@ module.exports = {
   onSignUpInstead,
   onSignInInstead,
   onMainMenu,
-  onAccount,
   onAreYouSure,
   onShowPassword,
   transitionText,
   transitionHTML,
   transitionFast,
-  toggleFooter,
   onFailure,
   changeTheme
 }

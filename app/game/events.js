@@ -6,6 +6,7 @@ const roads = require('./roads')
 const socket = require('../socket')
 const player = require('../player')
 const api = require('./api')
+const game = require('../game')
 
 const onJoinLobby = () => {
   $('#joinLobby').hide('slow')
@@ -27,6 +28,16 @@ const onStartGame = () => {
   $('.showOnStartGame').show('slow')
   board.initialize()
   api.createGame()
+}
+
+const onQuitGame = () => {
+  game.players.splice(game.players.indexOf(player._id), 1)
+  console.log(player._id, game.owner)
+  if (player._id === game.owner) api.deleteGame()
+  else api.updateGame('players', game.players)
+  game._id = undefined
+  game.owner = undefined
+  game.players = []
 }
 
 const onBuildSettlement = () => {
@@ -51,6 +62,7 @@ module.exports = {
   onJoinLobby,
   onSelectColor,
   onStartGame,
+  onQuitGame,
   onBuildSettlement,
   onBuildRoad
 }

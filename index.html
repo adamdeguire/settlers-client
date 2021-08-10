@@ -12,8 +12,9 @@
       <div class="app container">
         <div id="menu" class="row">
           <div class="col-5">
-            <section id="auth" class="hideOnSignIn">
-              <h1 id="gameTitle">Settlers</h1>
+            <h1 id="gameTitle" class="showOnStart hideOnStartGame">Settlers</h1>
+            <h3 id="message"></h3>
+            <section id="auth" class="showOnStart hideOnSignIn">
             <form id="signUp" class="hideOnStart hideOnSignIn auth border">
               <h2>Sign Up</h2>
               <label for="signUpEmail" class="col-12">Email:</label>
@@ -38,16 +39,17 @@
               <button id="signInInstead" class="hideOnStart instead btn btn-light">Sign In</button>
             </form>
           </section>
-          <h3 id="message"></h3>
-            <div class="hideOnStart showOnSignIn" id="gameMenu">
+            <div class="hideOnStart showOnJoinLobby" id="gameMenu">
               <section class="overflow-auto rounded col-12" id="gameLog">
               </section>
               <form id="chatInput">
                 <input id="chat" autocomplete="off" class="message col-10" type="text">
                 <input id="send" type="submit" value="Send"/>
               </form>
-              <button id="joinLobby" class="hideOnStartGame">Join Lobby</button>
-              <button id="startGame" class="hideOnStart hideOnStartGame">Start Game</button>
+            </div>
+            <div id="startButtons" class="hideOnStart showOnSignIn hideOnStartGame">
+              <button id="joinLobby" class="showOnSignIn btn btn-light">Join Lobby</button>
+              <button id="startGame" class="hideOnStart btn btn-light">Start Game</button>
             </div>
             <div id="selectColor" class="hideOnStart showOnJoinLobby col-12">
               <h2>Select Color:</h2>
@@ -65,7 +67,7 @@
               <div id="ore" class="resource">0</div>
             </div>
             <div id="dice" class="hideOnStart showOnStartGame col-12">
-              <button id="rollDice">Roll</button>
+              <button id="rollDice" class="btn btn-light">Roll</button>
               <svg class="dice" id="die1" width="88" height="88">
                 <rect x="7" y="7" rx="2" width="76" height="76" stroke-width="9" fill="white" stroke="#000"/>
               </svg>
@@ -75,9 +77,9 @@
             </div>
             <div id="build" class="hideOnStart showOnStartGame col-12">
               <h2>Build:</h2>
-              <button title="1 sheep, 1 wheat, 1 wood, 1 brick" class="build" id="buildSettlement">Settlement</button>
-              <button title="1 wood, 1 brick" class="build" id="buildRoad">Road</button>
-              <button title="1 sheep, 1 wheat, 1 ore" class="build" id="getDevCard">Development Card</button>
+              <button title="1 sheep, 1 wheat, 1 wood, 1 brick" class="build btn btn-light" id="buildSettlement">Settlement</button>
+              <button title="1 wood, 1 brick" class="build btn btn-light" id="buildRoad">Road</button>
+              <button title="1 sheep, 1 wheat, 1 ore" class="build btn btn-light" id="getDevCard">Development Card</button>
             </div>
             <div id="gamePieces" class="hideOnStart showOnStartGame col-12">
               <div id="settlements" class="hideOnStart showOnStartGame">
@@ -85,6 +87,24 @@
               <div id="roads" class="hideOnStart showOnStartGame">
               </div>
             </div>
+            <footer class="hideOnStart col-12">
+              <div class="menuBtns">
+                <button id="changeTheme" class="hideOnStart showOnSignIn menuBtn btn btn-light">Dark Mode</button>
+                <button id="showPassword" class="hideOnStart showOnSignIn menuBtn btn btn-light">Change Password</button>
+                <button id="showSignOut" class="hideOnStart signOut btn btn-light">Sign Out</button>
+                <button id="quitGame" class="hideOnStart showOnStartGame menuBtn btn btn-light">Quit Game</button>
+                <div id="areYouSure" class="hideOnStart hideOnSignIn signOut signOutConfirm">Are you sure?</div>
+                <button id="signOut" class="hideOnStart hideOnSignIn signOut signOutConfirm areYouSure btn btn-light">Yes</button>
+                <button id="cancelSignOut" class="hideOnStart hideOnSignIn showSignOut signOut signOutConfirm areYouSure btn btn-light">No</button></div>
+              <form id="changePassword" class="hideOnStart hideOnSignIn auth">
+                <label class="col-6 changePassLabel">Old Password:</label>
+                <input class="input col-6" name="passwords[old]" type="password">
+                <label class="col-6 changePassLabel">New Password:</label>
+                <input class="input col-6" name="passwords[new]" type="password">
+                <button type="submit" class="btn btn-light">Confirm</button>
+              </form>
+                <button id="neat" class="hideOnStart hideOnSignIn menuBtn btn btn-light">Neat!</button>
+            </footer>
           </div>
           <div id="game" class="col-7">
             <div id="board" class="board">

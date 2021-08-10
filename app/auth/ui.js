@@ -21,7 +21,6 @@ const onSignInSuccess = (response) => {
   nav.onMainMenu()
   nav.transitionText('#message', `Welcome back, ${response.user.email}!`)
   $('#signIn').trigger('reset')
-  nav.transitionText('#gameTitle', ' ')
   player._id = response.user._id
   player.token = response.user.token
   player.email = response.user.email
@@ -33,19 +32,19 @@ const onSignInFailure = (response) => {
   $('#signIn').trigger('reset')
 }
 
-// On API Response Status 201, Created
+// On API Response Status 204, No Content
 // Transition to login view and display confirmation to user
 const onSignOutSuccess = () => {
   nav.transitionHTML('#showTable', '')
   nav.transitionText('#message', 'Come back soon!')
   $('.hideOnStart').hide(400)
   setTimeout(() => $('.showOnStart').show(600), 400)
-  nav.transitionText('#gameTitle', 'Tic-Tac-Toe')
   nav.transitionText('#authHeader', 'New here?')
   $('body').on('click', () => {
     nav.transitionText('#message', ' ')
     $('body').off()
   })
+  console.log('test')
 }
 
 // On API Response Status 204, No Content

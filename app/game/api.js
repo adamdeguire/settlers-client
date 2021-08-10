@@ -5,6 +5,7 @@
 const player = require('../player')
 const config = require('../config')
 const ui = require('./ui')
+const game = require('../game')
 
 // Request new game creation
 const createGame = () => {
@@ -16,7 +17,9 @@ const createGame = () => {
     },
     data: {
       game: {
-        owner: player._id
+        owner: player._id,
+        players: game.players,
+        board: $('#board').html()
       }
     }
   })
@@ -24,18 +27,19 @@ const createGame = () => {
     .catch(err => console.log(err))
 }
 
-const updateGame = (key, value) => {
+const updateGame = () => {
   return $.ajax({
-    url: `${config.apiUrl}/change-password`,
+    url: `${config.apiUrl}/games/${game._id}`,
     method: 'PATCH',
     headers: {
       Authorization: `Bearer ${player.token}`
     },
     data: {
       game: {
-        _id: player.gameId,
-        key,
-        value
+        owner: game.owner,
+        players: game.players,
+        settlements: $('#settlements').html(),
+        roads: $('#roads').html()
       }
     }
   })
@@ -43,7 +47,20 @@ const updateGame = (key, value) => {
     .catch()
 }
 
+const deleteGame = () => {
+  return $.ajax({
+    url: `${config.apiUrl}/games/${game._id}`,
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${player.token}`
+    }
+  })
+    .then(console.log(game))
+    .catch(err => console.log(err))
+}
+
 module.exports = {
   createGame,
-  updateGame
+  updateGame,
+  deleteGame
 }
