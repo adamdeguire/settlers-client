@@ -19,8 +19,8 @@ const rollDice = (roll1 = 0, roll2 = 0) => {
   roll2 = roll()
 
   setTimeout(() => {
-    $('#die1').load(`public/images/${roll1}.txt`)
-    $('#die2').load(`public/images/${roll2}.txt`)
+    $('#die1').load(`public/images/die${roll1}.txt`)
+    $('#die2').load(`public/images/die${roll2}.txt`)
     i++
     rollDice(roll1, roll2)
   }, 100)
