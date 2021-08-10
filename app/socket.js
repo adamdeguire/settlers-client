@@ -1,6 +1,7 @@
 'use strict'
 const io = require('socket.io-client')
-const socket = io('http://localhost:4741')
+const apiUrl = require('./config').apiUrl
+const socket = io(apiUrl)
 const player = require('./player')
 const resources = require('./game/resources')
 
@@ -48,7 +49,7 @@ const displayMessage = (data) => {
 const sendMessage = (event) => {
   event.preventDefault()
   if (!connected) {
-    displayMessage({ message: 'Join the game to enable chat.', user: 'Server' })
+    displayMessage({ message: 'Join the game to enable chat.' })
     return
   }
   const user = player.email
