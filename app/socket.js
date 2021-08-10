@@ -117,8 +117,8 @@ const rollDice = (roll1, roll2) => {
 
 socket.on('dice-roll', (roll1, roll2) => {
   const rollValue = roll1 + roll2
-  $('#die1').load(`app/game/dice/die${roll1}.txt`)
-  $('#die2').load(`app/game/dice/die${roll2}.txt`)
+  $('#die1').load(`public/images/${roll1}.txt`)
+  $('#die2').load(`public/images/${roll2}.txt`)
   $('.land').each(function () {
     const marker = $(this).find(`.marker${rollValue}`)
     marker.css('background-size', '75%')
