@@ -190,10 +190,11 @@ body {
 
 .road {
   bottom: 10vh;
+  border: 1px solid black;
   height: calc((3 * var(--s)) / 5);
   width: 10px;
   position: absolute;
-  z-index: 999 !important;
+  z-index: 998 !important;
 
   &.t-l {
     transform: rotate(240deg);
