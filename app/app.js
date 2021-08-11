@@ -2,6 +2,7 @@
 // const example = require('./example')
 
 import 'jquery-ui/ui/widgets/draggable'
+const lobbyEvents = require('./lobby/events')
 const gameEvents = require('./game/events')
 const authEvents = require('./auth/events')
 const nav = require('./nav/ui')
@@ -26,12 +27,12 @@ $(() => {
   $('#account').on('click', nav.onAccount)
   $('#neat').on('click', nav.onMainMenu)
 
-  $('#joinLobby').on('click', gameEvents.onJoinLobby)
+  $('#joinLobby').on('click', lobbyEvents.onJoinLobby)
   $('#buildSettlement').on('click', gameEvents.onBuildSettlement)
   $('#buildRoad').on('click', gameEvents.onBuildRoad)
   $('.color').on('click', gameEvents.onSelectColor)
+  $('#endTurn').on('click', gameEvents.onEndTurn)
   $('#quitGame').on('click', gameEvents.onQuitGame)
-
   $('#chatInput').on('submit', socket.sendMessage)
 
   $('.hideOnStart').hide()

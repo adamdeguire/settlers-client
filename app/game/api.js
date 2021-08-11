@@ -24,7 +24,7 @@ const createGame = () => {
     }
   })
     .then(ui.onStartGameSuccess)
-    .catch(err => console.log(err))
+    .catch()
 }
 
 const updateGame = () => {
@@ -43,7 +43,7 @@ const updateGame = () => {
       }
     }
   })
-    .then()
+    .then(ui.onUpdateGameSuccess)
     .catch()
 }
 

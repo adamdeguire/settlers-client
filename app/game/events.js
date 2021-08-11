@@ -1,5 +1,6 @@
 'use strict'
 
+const lobbyEvents = require('../lobby/events')
 const board = require('./board')
 const settlements = require('./settlements')
 const roads = require('./roads')
@@ -7,13 +8,6 @@ const socket = require('../socket')
 const player = require('../player')
 const api = require('./api')
 const game = require('../game')
-
-const onJoinLobby = () => {
-  $('#joinLobby').hide('slow')
-  $('.showOnJoinLobby').show('slow')
-  socket.connect()
-  socket.greetUser()
-}
 
 const onSelectColor = (event) => {
   player.color = event.target.id
@@ -26,18 +20,33 @@ const onSelectColor = (event) => {
 const onStartGame = () => {
   $('.hideOnStartGame').hide('slow')
   $('.showOnStartGame').show('slow')
+  lobbyEvents.onStartGame()
   board.initialize()
   api.createGame()
 }
 
+const onEndTurn = () => {
+  const playerIndex = game.players.indexOf(player._id)
+  const nextPlayerIndex = (playerIndex + 1) % game.players.length
+  const nextPlayer = game.players[nextPlayerIndex]
+  socket.nextTurn(nextPlayer)
+}
+
 const onQuitGame = () => {
   game.players.splice(game.players.indexOf(player._id), 1)
-  console.log(player._id, game.owner)
-  if (player._id === game.owner) api.deleteGame()
-  else api.updateGame('players', game.players)
+  if (player._id === game.owner) {
+    api.deleteGame()
+    socket.hostQuit()
+    $('.showOnStartGame, .showOnJoinLobby, #startGame').hide(400)
+    setTimeout(() => $('.showOnSignIn, #joinLobby').show(600), 400)
+  } else {
+    api.updateGame('players', game.players)
+    socket.playerQuit()
+  }
   game._id = undefined
   game.owner = undefined
   game.players = []
+  board.clearBoard()
 }
 
 const onBuildSettlement = () => {
@@ -59,9 +68,9 @@ const onBuildRoad = () => {
 }
 
 module.exports = {
-  onJoinLobby,
   onSelectColor,
   onStartGame,
+  onEndTurn,
   onQuitGame,
   onBuildSettlement,
   onBuildRoad

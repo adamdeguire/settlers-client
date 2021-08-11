@@ -44,7 +44,6 @@ const onSignOutSuccess = () => {
     nav.transitionText('#message', ' ')
     $('body').off()
   })
-  console.log('test')
 }
 
 // On API Response Status 204, No Content

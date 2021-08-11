@@ -35,6 +35,15 @@ const initialize = () => {
   initializePieces()
 }
 
+const clearBoard = () => {
+  $('.land').each(function (i) {
+    $(this).attr('class', 'land')
+    $(this).removeAttr('resource')
+    $(this).children('.marker').attr('class', 'marker')
+  })
+}
+
 module.exports = {
-  initialize
+  initialize,
+  clearBoard
 }

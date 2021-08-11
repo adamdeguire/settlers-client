@@ -5,6 +5,7 @@ const socket = io(apiUrl)
 const player = require('./player')
 const game = require('./game')
 const resources = require('./game/resources')
+const board = require('./game/board')
 
 let connected = player.connected
 let joined = player.joined
@@ -18,10 +19,9 @@ const connect = () => {
 
 // SOCKET BROADCAST HANDLERS
 // Player Added To Lobby
-socket.on('add-player', (playerId) => {
-  game.players.push(playerId)
+socket.on('update-players', (players) => {
+  game.players = players
   game.players = [...new Set(game.players.sort())]
-  console.log(game.players)
 })
 
 // Other Player Selected Color
@@ -36,7 +36,7 @@ socket.on('message', (data) => displayMessage(data))
 socket.on('start-game', (gameBoard, res) => {
   game._id = res.game._id
   game.owner = res.game.owner
-  $('#startGame').hide('slow')
+  $('.hideOnStartGame').hide('slow')
   $('.showOnStartGame').show('slow')
   $('#settlements').show()
   $('.settlement').draggable()
@@ -67,15 +67,38 @@ socket.on('road', (roads) => {
   $('#roads').html(roads)
 })
 
+// Host Quit Game
+socket.on('host-quit', () => {
+  displayMessage({ message: 'The host has ended the game. Returning to menu.' })
+  setTimeout(() => {
+    board.clearBoard()
+    $('.showOnStartGame, .showOnJoinLobby, #startGame').hide(400)
+    setTimeout(() => $('.showOnSignIn, #joinLobby').show(600), 400)
+    $('#gameLog').html('')
+    $('.color').show()
+  }, 5000)
+  game._id = undefined
+  game.owner = undefined
+  game.players = []
+})
+
+// Next Turn
+socket.on('next-turn', (nextPlayer) => {
+  const user = player.email
+  if (player._id === nextPlayer) {
+    setTimeout(() => {
+      updateLog(`${user}'s turn.`)
+      $('#rollDice').show(400)
+    }, 1200)
+  }
+})
+
 // SOCKET EMIT HANDLERS
 // Player Joined Lobby
 const greetUser = () => {
+  const user = player.email
   if (joined) return
   joined = true
-  const user = player.email
-  game.players.push(player._id)
-  socket.emit('add-player', player._id)
-
   let emitData = { message: `${user} joined the game!` }
   socket.emit('message', emitData)
   setTimeout(() => {
@@ -105,23 +128,31 @@ const displayMessage = (data) => {
 
 // Player Sent Message (emit)
 const sendMessage = (event) => {
+  const user = player.email
   event.preventDefault()
   if (!connected) {
     displayMessage({ message: 'Join the game to enable chat.' })
     return
   }
-  const user = player.email
+
   const message = $('#chat').val()
   $('#chat').val('')
   displayMessage({ message, user })
   socket.emit('message', { message, user })
 }
 
+const updatePlayers = (res) => {
+  console.log(res)
+  game.players = res.lobby.players
+  socket.emit('update-players', res.lobby.players)
+  console.log(game.players)
+}
+
 // Player Started Game
 const startGame = (res) => {
-  console.log('test1')
+  const user = player.email
   const gameBoard = $('.board').html()
-  updateLog(`${player.email} started the game.`)
+  updateLog(`${user} started the game.`)
   socket.emit('start-game', gameBoard, res)
 }
 
@@ -154,15 +185,39 @@ const rollDice = (roll1, roll2) => {
   setTimeout(() => displayMessage({ message }), 800)
 }
 
+const hostQuit = () => {
+  socket.emit('host-quit')
+  $('#gameLog').html('')
+  $('.color').show()
+}
+
+const playerQuit = () => {
+  const user = player.email
+  socket.emit('message', { message: `${user} quit the game.` })
+}
+
+const nextTurn = (nextPlayer) => {
+  // $('#rollDice, #build').hide(400)
+  const user = player.email
+  setTimeout(() => {
+    updateLog(`${user} ended their turn.`)
+    socket.emit('next-turn', nextPlayer)
+  }, 400)
+}
+
 module.exports = {
   connect,
   startGame,
   hideColor,
   rollDice,
+  updatePlayers,
   updateLog,
   sendMessage,
   displayMessage,
   greetUser,
   updateSettlements,
-  updateRoads
+  updateRoads,
+  hostQuit,
+  playerQuit,
+  nextTurn
 }
