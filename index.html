@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <title>Settlers</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+      <script src="public/vendor.js" type="text/javascript" charset="utf-8" defer></script>
+      <script src="public/application.js" type="text/javascript" charset="utf-8" defer></script>
+      <script src="https://cdn.socket.io/4.1.3/socket.io.min.js"></script>
+    </head>
+    <body>
+      <div class="app container">
+        <div id="menu" class="row">
+          <div class="col-5">
+            <h1 id="gameTitle" class="showOnStart hideOnStartGame">Settlers</h1>
+            <h3 id="message"></h3>
+            <section id="auth" class="showOnStart hideOnSignIn">
+            <form id="signUp" class="hideOnStart hideOnSignIn auth border">
+              <h2>Sign Up</h2>
+              <label for="signUpEmail" class="col-12">Email:</label>
+              <input id="signUpEmail" name="credentials[email]" type="email" class="input col-12">
+              <label for="signUpPass" class="col-12">Password:</label>
+              <input id="signUpPass" name="credentials[password]" type="password" class="input col-12">
+              <label for="signUpPassConfirm" class="col-12">Confirm Password:</label>
+              <input id="signUpPassConfirm" name="credentials[password_confirmation]" type="password" class="input col-12">
+              <button type="submit" class="btn btn-light">Sign Up</button>
+            </form>
+            <form id="signIn" class="showOnStart hideOnSignIn auth border">
+              <h2>Sign In</h2>
+              <label for="signInEmail" class="col-12">Email:</label>
+              <input id="signInEmail" name="credentials[email]" type="email" class="input col-12">
+              <label for="signInPass" class="col-12">Password:</label>
+              <input id="signInPass" name="credentials[password]" type="password" class="input col-12">
+              <button id="signInButton" type="submit" class="btn btn-light">Sign In</button>
+            </form>
+            <form id="authButtons" class="showOnStart hideOnSignIn border">
+              <h3 id="authHeader">New here?</h3>
+              <button id="signUpInstead" class="instead btn btn-light">Sign Up</button>
+              <button id="signInInstead" class="hideOnStart instead btn btn-light">Sign In</button>
+            </form>
+          </section>
+            <div class="hideOnStart showOnJoinLobby" id="gameMenu">
+              <section class="overflow-auto rounded col-12" id="gameLog">
+              </section>
+              <form id="chatInput">
+                <input id="chat" autocomplete="off" class="message col-10" type="text">
+                <input id="send" type="submit" value="Send"/>
+              </form>
+            </div>
+            <div id="startButtons" class="hideOnStart showOnSignIn hideOnStartGame">
+              <button id="joinLobby" class="showOnSignIn btn btn-light">Join Lobby</button>
+              <button id="startGame" class="hideOnStart btn btn-light">Start Game</button>
+            </div>
+            <div id="selectColor" class="hideOnStart showOnJoinLobby col-12">
+              <h2>Select Color:</h2>
+              <div id="red" class="color"></div>
+              <div id="blue" class="color"></div>
+              <div id="white" class="color"></div>
+              <div id="orange" class="color"></div>
+            </div>
+            <div id="resources" class="hideOnStart showOnStartGame col-12">
+              <h2>Resources:</h2>
+              <div id="sheep" class="resource">0</div>
+              <div id="wheat" class="resource">0</div>
+              <div id="wood" class="resource">0</div>
+              <div id="brick" class="resource">0</div>
+              <div id="ore" class="resource">0</div>
+            </div>
+            <div id="dice" class="hideOnStart showOnStartGame col-12">
+              <button id="rollDice" class="btn btn-light">Roll</button>
+              <svg class="dice" id="die1" width="88" height="88">
+                <rect x="7" y="7" rx="2" width="76" height="76" stroke-width="9" fill="white" stroke="#000"/>
+              </svg>
+              <svg class="dice" id="die2" width="88" height="88">
+                <rect x="7" y="7" rx="2" width="76" height="76" stroke-width="9" fill="white" stroke="#000"/>
+              </svg>
+            </div>
+            <div id="build" class="hideOnStart showOnStartGame col-12">
+              <h2>Build:</h2>
+              <button title="1 sheep, 1 wheat, 1 wood, 1 brick" class="build btn btn-light" id="buildSettlement">Settlement</button>
+              <button title="1 wood, 1 brick" class="build btn btn-light" id="buildRoad">Road</button>
+              <!-- <button title="1 sheep, 1 wheat, 1 ore" class="build btn btn-light" id="getDevCard">Development Card</button> -->
+            </div>
+              <button id="endTurn" class="hideOnStart showOnStartGame btn btn-light">End Turn</button>
+            <div id="gamePieces" class="hideOnStart showOnStartGame col-12">
+              <div id="settlements" class="hideOnStart showOnStartGame">
+              </div>
+              <div id="roads" class="hideOnStart showOnStartGame">
+              </div>
+            </div>
+            <footer class="hideOnStart col-12">
+              <div class="menuBtns">
+                <button id="changeTheme" class="hideOnStart showOnSignIn menuBtn btn btn-light">Dark Mode</button>
+                <button id="showPassword" class="hideOnStart showOnSignIn menuBtn btn btn-light">Change Password</button>
+                <button id="showSignOut" class="hideOnStart signOut btn btn-light">Sign Out</button>
+                <button id="quitGame" class="hideOnStart showOnStartGame menuBtn btn btn-light">Quit Game</button>
+                <div id="areYouSure" class="hideOnStart hideOnSignIn signOut signOutConfirm">Are you sure?</div>
+                <button id="signOut" class="hideOnStart hideOnSignIn signOut signOutConfirm areYouSure btn btn-light">Yes</button>
+                <button id="cancelSignOut" class="hideOnStart hideOnSignIn showSignOut signOut signOutConfirm areYouSure btn btn-light">No</button></div>
+              <form id="changePassword" class="hideOnStart hideOnSignIn auth">
+                <label class="col-6 changePassLabel">Old Password:</label>
+                <input class="input col-6" name="passwords[old]" type="password">
+                <label class="col-6 changePassLabel">New Password:</label>
+                <input class="input col-6" name="passwords[new]" type="password">
+                <button type="submit" class="btn btn-light">Confirm</button>
+              </form>
+                <button id="neat" class="hideOnStart hideOnSignIn menuBtn btn btn-light">Neat!</button>
+            </footer>
+          </div>
+          <div id="game" class="col-7">
+            <div id="board" class="board">
+              <div class="container">
+                <div class="row boardRow">
+                  <div></div>
+                </div>
+                <div class="row boardRow">
+                  <div></div>
+                  <div class="water"></div>
+                  <div class="water port"></div>
+                  <div class="water"></div>
+                  <div class="water port"></div>
+                  <div class="water"></div>
+                  <div class="water"></div>
+                </div>
+                <div id="row1" class="row boardRow">
+                  <div></div>
+                  <div class="water"></div>
+                  <div class="water"></div>
+                  <div id="land1" class="land">
+                    <div class="marker" data-x="2" data-y="1"></div>
+                    <div id="i1" data-tiles="[1]" class="i t"></div>
+                    <div id="i2" data-tiles="[1]" class="i t-l"></div>
+                    <div id="i3" data-tiles="[1,2]" class="i t-r"></div>
+                    <div id="i4" data-tiles="[1,4]" class="i b-l"></div>
+                    <div id="i5" data-tiles="[1,2,5]" class="i b-r"></div>
+                    <div id="i6" data-tiles="[1,4,5]" class="i b"></div>
+                    <div id="r1" class="r t-l"></div>
+                    <div id="r2" class="r t-r"></div>
+                    <div id="r3" class="r r-m"></div>
+                    <div id="r4" class="r b-r"></div>
+                    <div id="r5" class="r b-l"></div>
+                    <div id="r6" class="r l-m"></div>
+                  </div>
+                  <div id="land2" class="land">
+                    <div class="marker" data-x="3" data-y="1"></div>
+                    <div id="i7" data-tiles="[2]" class="i t"></div>
+                    <div id="i8" data-tiles="[2,5,6]" class="i b"></div>
+                    <div id="r7" class="r t-l"></div>
+                    <div id="r8" class="r t-r"></div>
+                    <div id="r9" class="r b-r"></div>
+                    <div id="r10" class="r b-l"></div>
+                  </div>
+                  <div id="land3" class="land">
+                    <div class="marker" data-x="4" data-y="1"></div>
+                    <div id="i9" data-tiles="[3]" class="i t"></div>
+                    <div id="i10" data-tiles="[2,3]" class="i t-l"></div>
+                    <div id="i11" data-tiles="[3]" class="i t-r"></div>
+                    <div id="i12" data-tiles="[2,3,6]" class="i b-l"></div>
+                    <div id="i13" data-tiles="[3,7]" class="i b-r"></div>
+                    <div id="i14" data-tiles="[3]" class="i b"></div>
+                    <div id="r11" class="r t-l"></div>
+                    <div id="r12" class="r t-r"></div>
+                    <div id="r13" class="r r-m"></div>
+                    <div id="r14" class="r b-r"></div>
+                    <div id="r15" class="r b-l"></div>
+                    <div id="r16" class="r l-m"></div>
+                  </div>
+                  <div class="water port"></div>
+                  <div class="water"></div>
+                </div>
+                <div id="row2" class="row boardRow">
+                  <div class="water"></div>
+                  <div class="water port"></div>
+                  <div id="land4" class="land">
+                    <div class="marker" data-x="1.5" data-y="2"></div>
+                    <div id="i15" data-tiles="[4]" class="i t-l"></div>
+                    <div id="i16" data-tiles="[4,5,9]" class="i b-r"></div>
+                    <div id="r17" class="r t-l"></div>
+                    <div id="r18" class="r r-m"></div>
+                    <div id="r19" class="r b-r"></div>
+                    <div id="r20" class="r l-m"></div>
+                  </div>
+                  <div id="land5" class="land">
+                    <div class="marker" data-x="2.5" data-y="2"></div>
+                    <div id="r21" class="r r-m"></div>
+                    <div id="r22" class="r b-l"></div>
+                  </div>
+                  <div id="land6" class="land">
+                    <div class="marker" data-x="3.5" data-y="2"></div>
+                  </div>
+                  <div id="land7" class="land">
+                    <div class="marker" data-x="4.5" data-y="2"></div>
+                    <div id="i17" data-tiles="[7]" class="i t-r"></div>
+                    <div id="i18" data-tiles="[6,7,11]" class="i b-l"></div>
+                    <div id="r23" class="r t-r"></div>
+                    <div id="r24" class="r r-m"></div>
+                    <div id="r25" class="r b-l"></div>
+                    <div id="r26" class="r l-m"></div>
+                  </div>
+                  <div class="water"></div>
+                  <div class="water"></div>
+                </div>
+                <div id="row3" class="row boardRow">
+                  <div></div>
+                  <div class="water"></div>
+                  <div id="land8" class="land">
+                    <div class="marker" data-x="1" data-y="3"></div>
+                    <div id="i19" data-tiles="[4,8]" class="i t"></div>
+                    <div id="i20" data-tiles="[8]" class="i t-l"></div>
+                    <div id="i21" data-tiles="[4,8,9]" class="i t-r"></div>
+                    <div id="i22" data-tiles="[8]" class="i b-l"></div>
+                    <div id="i23" data-tiles="[8,9,13]" class="i b-r"></div>
+                    <div id="i24" data-tiles="[8,13]" class="i b"></div>
+                    <div id="r27" class="r t-l"></div>
+                    <div id="r28" class="r t-r"></div>
+                    <div id="r29" class="r r-m"></div>
+                    <div id="r30" class="r b-r"></div>
+                    <div id="r31" class="r b-l"></div>
+                    <div id="r32" class="r l-m"></div>
+                  </div>
+                  <div id="land9" class="land">
+                    <div class="marker" data-x="2" data-y="3"></div>
+                  </div>
+                  <div id="land10" class="land">
+                    <div class="marker" data-x="3" data-y="3"></div>
+                    <div id="i25" data-tiles="[5,6,10]" class="i t"></div>
+                    <div id="i26" data-tiles="[5,9,10]" class="i t-l"></div>
+                    <div id="i27" data-tiles="[6,10,11]" class="i t-r"></div>
+                    <div id="i28" data-tiles="[9,10,14]" class="i b-l"></div>
+                    <div id="i29" data-tiles="[10,11,15]" class="i b-r"></div>
+                    <div id="i30" data-tiles="[10,14,15]" class="i b"></div>
+                    <div id="r33" class="r t-l"></div>
+                    <div id="r34" class="r t-r"></div>
+                    <div id="r35" class="r r-m"></div>
+                    <div id="r36" class="r b-r"></div>
+                    <div id="r37" class="r b-l"></div>
+                    <div id="r38" class="r l-m"></div>
+                  </div>
+                  <div id="land11" class="land">
+                    <div class="marker" data-x="4" data-y="3"></div>
+                    <div id="r39" class="r t-l"></div>
+                    <div id="r40" class="r b-l"></div>
+                  </div>
+                  <div id="land12" class="land">
+                    <div class="marker" data-x="5" data-y="3"></div>
+                    <div id="i31" data-tiles="[7,12]" class="i t"></div>
+                    <div id="i32" data-tiles="[7,11,12]" class="i t-l"></div>
+                    <div id="i33" data-tiles="[12]" class="i t-r"></div>
+                    <div id="i34" data-tiles="[11,12,16]" class="i b-l"></div>
+                    <div id="i35" data-tiles="[12]" class="i b-r"></div>
+                    <div id="i36" data-tiles="[12,16]" class="i b"></div>
+                    <div id="r41" class="r t-l"></div>
+                    <div id="r42" class="r t-r"></div>
+                    <div id="r43" class="r r-m"></div>
+                    <div id="r44" class="r b-r"></div>
+                    <div id="r45" class="r b-l"></div>
+                    <div id="r46" class="r l-m"></div>
+                  </div>
+                  <div class="water port"></div>
+                </div>
+                <div id="row4" class="row boardRow">
+                  <div class="water"></div>
+                  <div class="water port"></div>
+                  <div id="land13" class="land">
+                    <div class="marker" data-x="1.5" data-y="4"></div>
+                    <div id="i37" data-tiles="[9,13,14]" class="i t-r"></div>
+                    <div id="i38" data-tiles="[13]" class="i b-l"></div>
+                    <div id="r47" class="r t-r"></div>
+                    <div id="r48" class="r r-m"></div>
+                    <div id="r49" class="r b-l"></div>
+                    <div id="r50" class="r l-m"></div>
+                  </div>
+                  <div id="land14" class="land">
+                    <div class="marker" data-x="2.5" data-y="4"></div>
+                    <div id="r51" class="r t-l"></div>
+                    <div id="r52" class="r r-m"></div>
+                  </div>
+                  <div id="land15" class="land">
+                    <div class="marker" data-x="3.5" data-y="4"></div>
+                  </div>
+                  <div id="land16" class="land">
+                    <div class="marker" data-x="4.5" data-y="4"></div>
+                    <div id="i39" data-tiles="[11,15,16]" class="i t-l"></div>
+                    <div id="i40" data-tiles="[16]" class="i b-r"></div>
+                    <div id="r53" class="r t-l"></div>
+                    <div id="r54" class="r r-m"></div>
+                    <div id="r55" class="r b-r"></div>
+                    <div id="r56" class="r l-m"></div>
+                  </div>
+                  <div class="water"></div>
+                  <div class="water"></div>
+                </div>
+                <div id="row5" class="row boardRow">
+                  <div></div>
+                  <div class="water"></div>
+                  <div class="water"></div>
+                  <div id="land17" class="land">
+                    <div class="marker" data-x="2" data-y="5"></div>
+                    <div id="i41" data-tiles="[13,14,17]" class="i t"></div>
+                    <div id="i42" data-tiles="[13,17]" class="i t-l"></div>
+                    <div id="i43" data-tiles="[14,17,18]" class="i t-r"></div>
+                    <div id="i44" data-tiles="[17]" class="i b-l"></div>
+                    <div id="i45" data-tiles="[17,18]" class="i b-r"></div>
+                    <div id="i46" data-tiles="[17]" class="i b"></div>
+                    <div id="r57" class="r t-l"></div>
+                    <div id="r58" class="r t-r"></div>
+                    <div id="r59" class="r r-m"></div>
+                    <div id="r60" class="r b-r"></div>
+                    <div id="r61" class="r b-l"></div>
+                    <div id="r62" class="r l-m"></div>
+                  </div>
+                  <div id="land18" class="land">
+                    <div class="marker" data-x="3" data-y="5"></div>
+                    <div id="i47" data-tiles="[14,15,18]" class="i t"></div>
+                    <div id="i48" data-tiles="[18]" class="i b"></div>
+                    <div id="r63" class="r t-l"></div>
+                    <div id="r64" class="r t-r"></div>
+                    <div id="r65" class="r b-r"></div>
+                    <div id="r66" class="r b-l"></div>
+                  </div>
+                  <div id="land19" class="land">
+                    <div class="marker" data-x="4" data-y="5"></div>
+                    <div id="i49" data-tiles="[15,16,19]" class="i t"></div>
+                    <div id="i50" data-tiles="[15,18,19]" class="i t-l"></div>
+                    <div id="i51" data-tiles="[16,19]" class="i t-r"></div>
+                    <div id="i52" data-tiles="[18,19]" class="i b-l"></div>
+                    <div id="i53" data-tiles="[19]" class="i b-r"></div>
+                    <div id="i54" data-tiles="[19]" class="i b"></div>
+                    <div id="r67" class="r t-l"></div>
+                    <div id="r68" class="r t-r"></div>
+                    <div id="r69" class="r r-m"></div>
+                    <div id="r70" class="r b-r"></div>
+                    <div id="r71" class="r b-l"></div>
+                    <div id="r72" class="r l-m"></div>
+                  </div>
+                  <div class="water port"></div>
+                  <div class="water"></div>
+                </div>
+                <div id="row6" class="row boardRow">
+                  <div></div>
+                  <div class="water"></div>
+                  <div class="water port"></div>
+                  <div class="water"></div>
+                  <div class="water port"></div>
+                  <div class="water"></div>
+                  <div class="water"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+</html>
