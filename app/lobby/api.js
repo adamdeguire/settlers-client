@@ -15,13 +15,8 @@ const getLobby = () => {
     }
   })
     .then(res => {
-      console.log(res)
-      return res
-    })
-    .then(res => {
       res.lobby.length ? addPlayer(res) : createLobby()
     })
-    .catch()
 }
 
 // Request new lobby creation
@@ -37,11 +32,9 @@ const createLobby = () => {
     }
   })
     .then(res => socket.updatePlayers(res))
-    .catch(err => console.log(err))
 }
 
 const addPlayer = (res) => {
-  console.log(player._id)
   return $.ajax({
     url: `${config.apiUrl}/add-player/${res.lobby[0]._id}`,
     method: 'PATCH',
@@ -52,12 +45,7 @@ const addPlayer = (res) => {
       player: player._id
     }
   })
-    .then(res => {
-      console.log(res)
-      return res
-    })
     .then(res => socket.updatePlayers(res))
-    .catch(err => console.log(err))
 }
 
 const removePlayer = (res) => {
@@ -71,8 +59,6 @@ const removePlayer = (res) => {
       player: player._id
     }
   })
-    .then(response => console.log(response))
-    .catch(err => console.log(err))
 }
 
 const deleteLobbies = () => {
@@ -83,8 +69,6 @@ const deleteLobbies = () => {
       Authorization: `Bearer ${player.token}`
     }
   })
-    .then(res => console.log(res))
-    .catch(err => console.log(err))
 }
 
 module.exports = {

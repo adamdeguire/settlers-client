@@ -24,7 +24,7 @@ const createGame = () => {
     }
   })
     .then(ui.onStartGameSuccess)
-    .catch()
+    .catch(ui.onFailure)
 }
 
 const updateGame = () => {
@@ -44,7 +44,7 @@ const updateGame = () => {
     }
   })
     .then(ui.onUpdateGameSuccess)
-    .catch()
+    .catch(ui.onFailure)
 }
 
 const deleteGame = () => {
@@ -55,8 +55,8 @@ const deleteGame = () => {
       Authorization: `Bearer ${player.token}`
     }
   })
-    .then(console.log(game))
-    .catch(err => console.log(err))
+    .then(ui.onDeleteGameSuccess)
+    .catch(ui.onFailure)
 }
 
 module.exports = {

@@ -35,6 +35,16 @@ $(() => {
   $('#quitGame').on('click', gameEvents.onQuitGame)
   $('#chatInput').on('submit', socket.sendMessage)
 
+  // Observe game piece updates
+  const settlements = document.querySelector('#settlements')
+  const roads = document.querySelector('#roads')
+
+  const settlementObserver = new MutationObserver(gameEvents.onNewGamePiece)
+  const roadObserver = new MutationObserver(gameEvents.onNewGamePiece)
+
+  settlementObserver.observe(settlements, { subtree: true, childList: true })
+  roadObserver.observe(roads, { subtree: true, childList: true })
+
   $('.hideOnStart').hide()
   $('#rollDice').on('click', rollDice)
 })

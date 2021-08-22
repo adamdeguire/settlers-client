@@ -10,6 +10,7 @@ const board = require('./game/board')
 let connected = player.connected
 let joined = player.joined
 
+// User Entered Site
 const connect = () => {
   if (connected) return
   socket.emit('new-user')
@@ -141,11 +142,10 @@ const sendMessage = (event) => {
   socket.emit('message', { message, user })
 }
 
+// Player Joined/Left
 const updatePlayers = (res) => {
-  console.log(res)
   game.players = res.lobby.players
   socket.emit('update-players', res.lobby.players)
-  console.log(game.players)
 }
 
 // Player Started Game
@@ -165,11 +165,13 @@ const updateLog = (message) => {
 // Player Built Settlement
 const updateSettlements = (settlements) => {
   socket.emit('settlement', settlements)
+  // if (player._id === game.owner) api.updateGame()
 }
 
 // Player Built Road
 const updateRoads = (roads) => {
   socket.emit('road', roads)
+  // if (player._id === game.owner) api.updateGame()
 }
 
 // Player Selected Color
@@ -185,17 +187,20 @@ const rollDice = (roll1, roll2) => {
   setTimeout(() => displayMessage({ message }), 800)
 }
 
+// Host Quit Game
 const hostQuit = () => {
   socket.emit('host-quit')
   $('#gameLog').html('')
   $('.color').show()
 }
 
+// Non-Host Quit Game
 const playerQuit = () => {
   const user = player.email
   socket.emit('message', { message: `${user} quit the game.` })
 }
 
+// Player Ended Turn
 const nextTurn = (nextPlayer) => {
   // $('#rollDice, #build').hide(400)
   const user = player.email

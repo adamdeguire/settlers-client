@@ -40,7 +40,7 @@ const onQuitGame = () => {
     $('.showOnStartGame, .showOnJoinLobby, #startGame').hide(400)
     setTimeout(() => $('.showOnSignIn, #joinLobby').show(600), 400)
   } else {
-    api.updateGame('players', game.players)
+    api.updateGame()
     socket.playerQuit()
   }
   game._id = undefined
@@ -67,11 +67,16 @@ const onBuildRoad = () => {
   $('body').on('mouseup', '.road', roads.placeRoad)
 }
 
+const onNewGamePiece = () => {
+  if (player._id === game.owner) api.updateGame()
+}
+
 module.exports = {
   onSelectColor,
   onStartGame,
   onEndTurn,
   onQuitGame,
   onBuildSettlement,
-  onBuildRoad
+  onBuildRoad,
+  onNewGamePiece
 }

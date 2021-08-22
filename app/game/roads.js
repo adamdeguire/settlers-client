@@ -2,7 +2,6 @@
 
 const player = require('../player')
 const socket = require('../socket')
-const api = require('./api')
 
 const placeRoad = (event) => {
   const side = closestSide(event)
@@ -15,7 +14,6 @@ const placeRoad = (event) => {
   $(`#${event.target.id}`).css({ top: y, left: x }).off()
   socket.updateLog(`${player.email} built a road.`)
   socket.updateRoads($('#roads').html())
-  api.updateGame()
 }
 
 const rotateRoad = (sideId, roadId) => {
